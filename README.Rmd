@@ -10,7 +10,7 @@ devtools::install_github("potterzot/livingwage")
 
 ## Quick Example for Santa Fe
 
-``` {r}
+``` r
 library(CausalImpact)
 library(livingwage)
 library(tidyr)
@@ -35,13 +35,16 @@ post_pd <- as.Date(c("2004-07-01", "2006-07-01"))
 args <- list(nseasons = 4, season.duration = 3)
 impact <- CausalImpact(dat, pre_pd, post_pd, model.args = args)
 plot(impact)    
-
+#> Warning: Removed 109 rows containing missing values (geom_path).
+#> Warning: Removed 109 rows containing missing values (geom_path).
+#> Warning: Removed 109 rows containing missing values (geom_path).
 ```
 
-## Slightly More Complex Example
+![](http://i.imgur.com/hmr0nCN.png)
 
-``` {r}
-#continuing from previous code...
+## Slightly More Complex Example
+``` r
+
 library(bsts)
 
 #Set the post-period of the treatment location to NA, 
@@ -52,12 +55,28 @@ sf[sf$date >= post_pd[1], "sf"] <- NA
 #model employment as a linear trend
 ss <- AddLocalLinearTrend(list(), sf$sf)
 mdl <- bsts(sf ~ abq, ss, niter = 1000, data = sf[sf$date <= post_pd[2],])
+#> =-=-=-=-= Iteration 0 Tue Nov  3 12:50:17 2015 =-=-=-=-=
+#> =-=-=-=-= Iteration 100 Tue Nov  3 12:50:17 2015 =-=-=-=-=
+#> =-=-=-=-= Iteration 200 Tue Nov  3 12:50:17 2015 =-=-=-=-=
+#> =-=-=-=-= Iteration 300 Tue Nov  3 12:50:17 2015 =-=-=-=-=
+#> =-=-=-=-= Iteration 400 Tue Nov  3 12:50:17 2015 =-=-=-=-=
+#> =-=-=-=-= Iteration 500 Tue Nov  3 12:50:17 2015 =-=-=-=-=
+#> =-=-=-=-= Iteration 600 Tue Nov  3 12:50:17 2015 =-=-=-=-=
+#> =-=-=-=-= Iteration 700 Tue Nov  3 12:50:17 2015 =-=-=-=-=
+#> =-=-=-=-= Iteration 800 Tue Nov  3 12:50:18 2015 =-=-=-=-=
+#> =-=-=-=-= Iteration 900 Tue Nov  3 12:50:18 2015 =-=-=-=-=
 
 impact <- CausalImpact(bsts.model = mdl, 
                        post.period.response = post_pd_response)
 
 plot(impact)
 ```
+
+![](http://i.imgur.com/hU2GT4S.png)
+
+## Next Steps
+This is just the barest bones of an analysis, so nothing here should be considered conclusive or even interesting. Next steps are: 
+would be to gather data for multiple locations and specify a series of models.
 
 ## References
 
