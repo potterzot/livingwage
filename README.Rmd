@@ -82,4 +82,6 @@ would be to gather data for multiple locations and specify a series of models.
 
 * CausalImpact 1.0.3, Brodersen et al., Annals of Applied Statistics (2015). [https://google.github.io/CausalImpact/](http://google.github.io/CausalImpact/).
 
-* blsAPI 0.1.2, by Mike Silva. [https://github.com/mikeasilva/blsAPI](https://github.com/mikeasilva/blsAPI)
+* blsAPI, by Mike Silva. [https://github.com/mikeasilva/blsAPI](https://github.com/mikeasilva/blsAPI).
+
+* reprex, a reproducible example packages by Jennifer Bryan. https://github.com/jennybc/reprex
