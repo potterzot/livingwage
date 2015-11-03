@@ -1,0 +1,66 @@
+## Living Wage
+
+Using Bayesian Structural time-series models to estimate the causal impact of the living wage on employment.
+
+## Installation
+
+```
+devtools::install_github("potterzot/livingwage")
+```
+
+## Quick Example for Santa Fe
+
+``` {r}
+library(CausalImpact)
+library(livingwage)
+library(tidyr)
+library(dplyr)
+library(zoo)
+data(bls)
+
+#Load the data
+sf <- filter(bls, series %in% c("Santa Fe MSA", "Albuquerque MSA")) %>%
+  spread(key = series, value = employees)
+names(sf)[4:5] <- c("abq", "sf")
+dates <- as.Date(paste(sf$year, sf$periodName, "01", sep="-"), "%Y-%B-%d")
+sf$date <- dates
+dat <- zoo(sf[, c("sf", "abq")], dates)
+
+#Define the pre and post period
+#Santa Fe's $8.50 living wage went into effect in June 2004
+pre_pd <- as.Date(c("2001-06-01", "2004-06-01"))
+post_pd <- as.Date(c("2004-07-01", "2006-07-01"))
+
+#Model
+args <- list(nseasons = 4, season.duration = 3)
+impact <- CausalImpact(dat, pre_pd, post_pd, model.args = args)
+plot(impact)    
+
+```
+
+## Slightly More Complex Example
+
+``` {r}
+#continuing from previous code...
+library(bsts)
+
+#Set the post-period of the treatment location to NA, 
+#but first save to a variable
+post_pd_response <- sf[sf$date >= post_pd[1] & sf$date <= post_pd[2], "sf"]
+sf[sf$date >= post_pd[1], "sf"] <- NA
+
+#model employment as a linear trend
+ss <- AddLocalLinearTrend(list(), sf$sf)
+mdl <- bsts(sf ~ abq, ss, niter = 1000, data = sf[sf$date <= post_pd[2],])
+
+impact <- CausalImpact(bsts.model = mdl, 
+                       post.period.response = post_pd_response)
+
+plot(impact)
+```
+
+## References
+
+* CausalImpact 1.0.3, Brodersen et al., Annals of Applied Statistics (2015). [https://google.github.io/CausalImpact/](http://google.github.io/CausalImpact/).
+
+* blsAPI 0.1.2, by Mike Silva. [https://github.com/mikeasilva/blsAPI](https://github.com/mikeasilva/blsAPI)

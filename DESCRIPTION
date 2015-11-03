@@ -1,0 +1,15 @@
+Package: livingwage
+Title: Living Wage Employment Analysis
+Version: 0.0.0.9000
+Authors@R: person("Nicholas", "Potter", email = "potter.nicholas@gmail.com", role = c("aut", "cre"))
+Description: Provides tools, data, and analysis of various living wage laws, focusing on the potential issues involved, and implementing bayesian causal inference as a new method.
+Depends: R (>= 3.2.1)
+License: MIT + file LICENSE
+LazyData: true
+Imports:
+  CausalImpact
+Suggests:
+  testthat,
+  knitr,
+  rmarkdown
+VignetteBuilder: knitr
